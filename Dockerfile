@@ -1,6 +1,6 @@
 FROM arm64v8/openjdk
 
-#构建参数
+# 构建参数
 ARG JAR_FILE
 ARG WORK_PATH="/opt/jinghang"
 # 环境变量
