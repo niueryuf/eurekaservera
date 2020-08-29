@@ -4,7 +4,7 @@ pipeline {
     environment {
         GIT_TAG = sh(returnStdout: true,script: 'git describe --tags --always').trim()
 		username = "admin"
-		password = "Harbot12345"
+		password = "Harbor12345"
     }
 	 parameters {
         string(name: 'HARBOR_HOST', defaultValue: '47.106.224.69', description: 'harbor仓库地址')
