@@ -8,7 +8,6 @@ class EurekaserverApplicationTests {
 
 	@Test
 	void contextLoads() {
-	//	int i = 8475 / 0 ;
 	}
 
 }
