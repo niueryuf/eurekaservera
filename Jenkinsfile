@@ -1,17 +1,18 @@
-pipeline{
+// 需要在jenkins的Credentials设置中配置jenkins-harbor-creds、jenkins-k8s-config参数
+pipeline {
     agent any
-	environment {
+    environment {
         GIT_TAG = sh(returnStdout: true,script: 'git describe --tags --always').trim()
-		username = "niueryuf"
-		password = "csy98314.."
+		username = "admin"
+		password = "Harbot12345"
     }
 	 parameters {
-        string(name: 'HARBOR_HOST', defaultValue: '172.23.101.66', description: 'harbor仓库地址')
-        string(name: 'DOCKER_IMAGE', defaultValue: 'pipeline-demo', description: 'docker镜像名')
-        string(name: 'APP_NAME', defaultValue: 'pipeline-demo', description: 'k8s中标签名')
-        string(name: 'K8S_NAMESPACE', defaultValue: 'demo', description: 'k8s的namespace名称')
+        string(name: 'HARBOR_HOST', defaultValue: '47.106.224.69', description: 'harbor仓库地址')
+        string(name: 'DOCKER_IMAGE', defaultValue: 'library/eurekaserver_jks', description: 'docker镜像名')
+        string(name: 'APP_NAME', defaultValue: 'eurekaserver_jks', description: 'k8s中标签名')
+        string(name: 'K8S_NAMESPACE', defaultValue: 'jinghang', description: 'k8s的namespace名称')
     }
-    stages{
+	stages{
         stage("Maven Build"){
             steps{
                 sh 'mvn clean package -Dfile.encoding=UTF-8 -DskipTests=true'
@@ -21,10 +22,10 @@ pipeline{
 		stage('Docker Build'){
 			steps {
                 unstash 'app'
-                sh "docker login -u ${username} -p ${password}"
-                sh "docker build --build-arg JAR_FILE=`ls target/*.jar |cut -d '/' -f2` -t ${username}/${params.DOCKER_IMAGE}:${GIT_TAG} ."
-                sh "docker push ${username}/${params.DOCKER_IMAGE}:${GIT_TAG}"
-                sh "docker rmi ${username}/${params.DOCKER_IMAGE}:${GIT_TAG}"
+				 sh "docker login -u ${username} -p ${password}  ${params.HARBOR_HOST}"
+                sh "docker build --build-arg JAR_FILE=`ls target/*.jar |cut -d '/' -f2` -t ${params.HARBOR_HOST}/${params.DOCKER_IMAGE}:${GIT_TAG} ."
+                sh "docker push ${params.HARBOR_HOST}/${params.DOCKER_IMAGE}:${GIT_TAG}"
+                sh "docker rmi ${params.HARBOR_HOST}/${params.DOCKER_IMAGE}:${GIT_TAG}"
             }
 		}
 		stage('Deploy') {
@@ -33,6 +34,5 @@ pipeline{
                 sh "kubectl apply -f k8s-deployment.yml --namespace=${params.K8S_NAMESPACE}"
             }
 		}
-		
     }
 }
