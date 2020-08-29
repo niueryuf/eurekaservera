@@ -8,8 +8,8 @@ pipeline {
     }
 	 parameters {
         string(name: 'HARBOR_HOST', defaultValue: '47.106.224.69', description: 'harbor仓库地址')
-        string(name: 'DOCKER_IMAGE', defaultValue: 'library/eurekaserver_jks', description: 'docker镜像名')
-        string(name: 'APP_NAME', defaultValue: 'eurekaserver_jks', description: 'k8s中标签名')
+        string(name: 'DOCKER_IMAGE', defaultValue: 'library/eurekaserver', description: 'docker镜像名')
+        string(name: 'APP_NAME', defaultValue: 'eurekaserver', description: 'k8s中标签名')
         string(name: 'K8S_NAMESPACE', defaultValue: 'jinghang', description: 'k8s的namespace名称')
     }
 	stages{
